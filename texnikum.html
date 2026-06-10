@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="kaa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bozataw rayonı 2-sanlı texnikum</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1B3A6B;
+      --navy-dark: #0F2347;
+      --gold: #F5A623;
+      --gold-light: #FDD07A;
+      --white: #FFFFFF;
+      --gray-light: #F4F6FA;
+      --gray-mid: #E2E8F0;
+      --gray-text: #6B7280;
+      --text: #1A202C;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(11,27,60,0.97);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6vw;
+      height: 64px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none;
+    }
+    .nav-logo .emblem {
+      width: 40px; height: 40px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--navy-dark);
+      flex-shrink: 0;
+    }
+    .nav-logo span {
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+      max-width: 200px;
+    }
+    .nav-links {
+      display: flex; gap: 28px; list-style: none;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    /* ── HERO ── */
+    #home {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, #2a5298 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 6vw 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    #home::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    /* Building silhouette decoration */
+    .building-svg {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 760px;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy-dark);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 2px;
+      margin-bottom: 28px;
+      animation: fadeDown 0.7s ease both;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 12px;
+      animation: fadeDown 0.7s 0.15s ease both;
+    }
+    .hero-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
+      color: var(--gold-light);
+      font-weight: 700;
+      margin-bottom: 24px;
+      animation: fadeDown 0.7s 0.25s ease both;
+    }
+    .hero-desc {
+      color: rgba(255,255,255,0.72);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 560px;
+      margin: 0 auto 40px;
+      animation: fadeDown 0.7s 0.35s ease both;
+    }
+    .hero-buttons {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+      animation: fadeDown 0.7s 0.45s ease both;
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--navy-dark);
+      padding: 14px 32px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(245,166,35,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,166,35,0.45); }
+    .btn-outline {
+      border: 2px solid rgba(255,255,255,0.5);
+      color: var(--white);
+      padding: 12px 32px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--gold); background: rgba(245,166,35,0.08); }
+
+    .hero-stats {
+      position: absolute;
+      bottom: 36px; left: 0; right: 0;
+      display: flex; justify-content: center; gap: 60px;
+      z-index: 2;
+      animation: fadeUp 0.8s 0.6s ease both;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--gold);
+    }
+    .stat-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.05em;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 90px 6vw; }
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+    .section-line {
+      width: 48px; height: 3px;
+      background: var(--gold);
+      margin-bottom: 40px;
+      border-radius: 2px;
+    }
+
+    /* ── YANGILIKLAR ── */
+    #news { background: var(--gray-light); }
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 28px;
+    }
+    .news-card {
+      background: var(--white);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .news-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.11); }
+    .news-card-img {
+      height: 180px;
+      background: linear-gradient(135deg, var(--navy) 0%, #2a5298 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .news-card-img .icon {
+      font-size: 48px; opacity: 0.5;
+    }
+    .news-card-body { padding: 22px 24px 24px; }
+    .news-date {
+      font-size: 12px;
+      color: var(--gray-text);
+      margin-bottom: 8px;
+    }
+    .news-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .news-card-text {
+      font-size: 14px;
+      color: var(--gray-text);
+      line-height: 1.65;
+    }
+    .news-tag {
+      display: inline-block;
+      background: var(--gold-light);
+      color: #7a4f00;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    /* ── O'QITUVCHILAR ── */
+    #teachers { background: var(--white); }
+    .teachers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 28px;
+    }
+    .teacher-card {
+      text-align: center;
+      padding: 32px 24px;
+      border-radius: 8px;
+      border: 1px solid var(--gray-mid);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .teacher-card:hover { border-color: var(--gold); box-shadow: 0 4px 20px rgba(245,166,35,0.12); }
+    .teacher-avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy), #2a5298);
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--white);
+      border: 3px solid var(--gold);
+    }
+    .teacher-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .teacher-subject {
+      font-size: 13px;
+      color: var(--gray-text);
+    }
+    .teacher-badge {
+      display: inline-block;
+      margin-top: 10px;
+      background: var(--gray-light);
+      color: var(--navy);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    /* ── HUJJATLAR ── */
+    #documents { background: var(--navy-dark); }
+    #documents .section-title { color: var(--white); }
+    #documents .section-eyebrow { color: var(--gold-light); }
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .doc-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+    .doc-card:hover {
+      background: rgba(245,166,35,0.1);
+      border-color: var(--gold);
+      transform: translateX(4px);
+    }
+    .doc-icon {
+      width: 48px; height: 48px;
+      background: var(--gold);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .doc-info { flex: 1; }
+    .doc-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .doc-meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+    }
+    .doc-arrow {
+      color: rgba(255,255,255,0.3);
+      font-size: 18px;
+      transition: color 0.2s;
+    }
+    .doc-card:hover .doc-arrow { color: var(--gold); }
+
+    /* ── BOG'LANISH ── */
+    #contact { background: var(--gray-light); }
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+    .contact-info { }
+    .contact-info p {
+      color: var(--gray-text);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .contact-icon {
+      width: 40px; height: 40px;
+      background: var(--navy);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .contact-item-label {
+      font-size: 12px;
+      color: var(--gray-text);
+      margin-bottom: 2px;
+    }
+    .contact-item-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .contact-form { }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--gray-mid);
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--navy); }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .btn-send {
+      background: var(--navy);
+      color: var(--white);
+      padding: 14px 32px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      width: 100%;
+    }
+    .btn-send:hover { background: var(--navy-dark); transform: translateY(-1px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy-dark);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 36px 6vw;
+      border-top: 2px solid var(--gold);
+    }
+    footer a { color: var(--gold-light); text-decoration: none; }
+    footer a:hover { color: var(--gold); }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    .footer-links {
+      display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+      margin: 16px 0;
+      list-style: none;
+    }
+    .footer-links a { font-size: 13px; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: fixed; top: 64px; left: 0; right: 0;
+        background: var(--navy-dark);
+        padding: 24px;
+        gap: 20px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+      }
+      .hamburger { display: flex; }
+      .hero-stats { gap: 30px; }
+      .contact-layout { grid-template-columns: 1fr; gap: 40px; }
+      section { padding: 60px 5vw; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-logo" href="#home">
+    <div class="emblem">2</div>
+    <span>Bozataw rayonı<br>2-sanlı texnikum</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">Bas bet</a></li>
+    <li><a href="#news">Jańalıqlar</a></li>
+    <li><a href="#teachers">Oqıtıwshılar</a></li>
+    <li><a href="#documents">Hújjetler</a></li>
+    <li><a href="#contact">Baylanıs</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menyu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <!-- Building silhouette SVG background -->
+  <svg class="building-svg" viewBox="0 0 1440 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path fill="#ffffff" d="M0,200 L0,140 L60,140 L60,100 L80,100 L80,80 L100,80 L100,60 L120,60 L120,80 L140,80 L140,100 L160,100 L160,140 L240,140 L240,120 L260,120 L260,90 L280,90 L280,70 L300,70 L300,50 L360,50 L360,70 L380,70 L380,90 L400,90 L400,120 L420,120 L420,140 L540,140 L540,110 L560,110 L560,80 L600,80 L600,60 L640,60 L640,80 L680,80 L680,110 L700,110 L700,140 L800,140 L800,120 L820,100 L840,80 L860,60 L880,80 L900,100 L920,120 L940,140 L1040,140 L1040,100 L1060,100 L1060,80 L1100,60 L1140,80 L1140,100 L1160,100 L1160,140 L1280,140 L1280,120 L1300,120 L1300,90 L1320,70 L1340,90 L1360,120 L1380,140 L1440,140 L1440,200 Z"/>
+  </svg>
+
+  <div class="hero-content">
+    <span class="hero-eyebrow">🎓 Qaraqalpaqstan Respublikası</span>
+    <h1 class="hero-title">Bozataw rayonı<br>2-sanlı texnikum</h1>
+    <p class="hero-subtitle">Bilim — keleshegińizdiń negrizi</p>
+    <p class="hero-desc">
+      Biz kásiplik bilim hám tálim beriwde 30 jıldan artıq tájiriybege iye orın.
+      Hár bir studenttiń úlken keleshegi ushın birlikte islep atırmız.
+    </p>
+    <div class="hero-buttons">
+      <a href="#news" class="btn-primary">Jańalıqlar</a>
+      <a href="#contact" class="btn-outline">Baylanısıw</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">30+</span>
+      <span class="stat-label">Jıl tájiriybe</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">800+</span>
+      <span class="stat-label">Student</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">45</span>
+      <span class="stat-label">Oqıtıwshı</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">12</span>
+      <span class="stat-label">Qásip</span>
+    </div>
+  </div>
+</section>
+
+<!-- YANGILIKLAR -->
+<section id="news">
+  <div class="section-eyebrow">Aqparat</div>
+  <h2 class="section-title">Jańalıqlar</h2>
+  <div class="section-line"></div>
+  <div class="news-grid">
+    <div class="news-card">
+      <div class="news-card-img"><span class="icon">🏆</span></div>
+      <div class="news-card-body">
+        <span class="news-tag">Tańlaw</span>
+        <div class="news-date">10 Iyun 2026</div>
+        <div class="news-card-title">Respublikalıq olimpiada — birinshi orun</div>
+        <p class="news-card-text">Texnikumımız studentleri respublikalıq kásiplik maslıq tańlawında birinshi orındı iyeledi.</p>
+      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-card-img"><span class="icon">📚</span></div>
+      <div class="news-card-body">
+        <span class="news-tag">Tálim</span>
+        <div class="news-date">5 Iyun 2026</div>
+        <div class="news-card-title">Jańa oqıw jılına qabıl etiwge hújjetler qabıl etilmekte</div>
+        <p class="news-card-text">2026–2027 oqıw jılına qabıl etiw bas­landı. Hújjetler hár kúni 9:00–17:00 aralagında qabıl etiledi.</p>
+      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-card-img"><span class="icon">🤝</span></div>
+      <div class="news-card-body">
+        <span class="news-tag">Shártnama</span>
+        <div class="news-date">28 May 2026</div>
+        <div class="news-card-title">Kásipxanalar menen jańa sheriklik kelisimi</div>
+        <p class="news-card-text">Rayondagı 5 kásipxana texnikum studentleri ushın amaliy tájiriybe ornın usındı.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- O'QITUVCHILAR -->
+<section id="teachers">
+  <div class="section-eyebrow">Jamoamız</div>
+  <h2 class="section-title">Oqıtıwshılar</h2>
+  <div class="section-line"></div>
+  <div class="teachers-grid">
+    <div class="teacher-card">
+      <div class="teacher-avatar">АБ</div>
+      <div class="teacher-name">Abdullayev Baxtiyar</div>
+      <div class="teacher-subject">Texnikum direktori</div>
+      <span class="teacher-badge">Bilim üstaz</span>
+    </div>
+    <div class="teacher-card">
+      <div class="teacher-avatar">ГД</div>
+      <div class="teacher-name">Dáwletova Gúlnar</div>
+      <div class="teacher-subject">Informatika</div>
+      <span class="teacher-badge">Joqarı kategoriya</span>
+    </div>
+    <div class="teacher-card">
+      <div class="teacher-avatar">МЖ</div>
+      <div class="teacher-name">Jumayev Muxammad</div>
+      <div class="teacher-subject">Texnologiya</div>
+      <span class="teacher-badge">Joqarı kategoriya</span>
+    </div>
+    <div class="teacher-card">
+      <div class="teacher-avatar">АС</div>
+      <div class="teacher-name">Saatova Aziza</div>
+      <div class="teacher-subject">Matematika</div>
+      <span class="teacher-badge">I-kategoriya</span>
+    </div>
+    <div class="teacher-card">
+      <div class="teacher-avatar">НИ</div>
+      <div class="teacher-name">Ibraimov Nurbek</div>
+      <div class="teacher-subject">Fizika</div>
+      <span class="teacher-badge">I-kategoriya</span>
+    </div>
+    <div class="teacher-card">
+      <div class="teacher-avatar">ЗК</div>
+      <div class="teacher-name">Karimova Zilola</div>
+      <div class="teacher-subject">Qaraqalpaq tili</div>
+      <span class="teacher-badge">Bilim üstaz</span>
+    </div>
+    <div class="teacher-card">
+      <div class="teacher-avatar">ОМ</div>
+      <div class="teacher-name">Matmusayev Oybek</div>
+      <div class="teacher-subject">Elektrotexnika</div>
+      <span class="teacher-badge">I-kategoriya</span>
+    </div>
+    <div class="teacher-card">
+      <div class="teacher-avatar">ФА</div>
+      <div class="teacher-name">Allaniyazova Feruza</div>
+      <div class="teacher-subject">Kimya</div>
+      <span class="teacher-badge">I-kategoriya</span>
+    </div>
+  </div>
+</section>
+
+<!-- HUJJATLAR -->
+<section id="documents">
+  <div class="section-eyebrow">Ma'lumotlar</div>
+  <h2 class="section-title">Hújjetler &amp; Grafik</h2>
+  <div class="section-line"></div>
+  <div class="docs-grid">
+    <a href="#" class="doc-card">
+      <div class="doc-icon">📋</div>
+      <div class="doc-info">
+        <div class="doc-name">Oqıw járdemi</div>
+        <div class="doc-meta">PDF · 2026 · Jańartılgan</div>
+      </div>
+      <span class="doc-arrow">→</span>
+    </a>
+    <a href="#" class="doc-card">
+      <div class="doc-icon">📅</div>
+      <div class="doc-info">
+        <div class="doc-name">Dáris grafigi</div>
+        <div class="doc-meta">PDF · 2025–2026 oqıw jılı</div>
+      </div>
+      <span class="doc-arrow">→</span>
+    </a>
+    <a href="#" class="doc-card">
+      <div class="doc-icon">📝</div>
+      <div class="doc-info">
+        <div class="doc-name">Imtixan járdemi</div>
+        <div class="doc-meta">PDF · Bahar semestri 2026</div>
+      </div>
+      <span class="doc-arrow">→</span>
+    </a>
+    <a href="#" class="doc-card">
+      <div class="doc-icon">🎓</div>
+      <div class="doc-info">
+        <div class="doc-name">Qabıl etiliw talaplary</div>
+        <div class="doc-meta">PDF · 2026–2027 oqıw jılı</div>
+      </div>
+      <span class="doc-arrow">→</span>
+    </a>
+    <a href="#" class="doc-card">
+      <div class="doc-icon">📊</div>
+      <div class="doc-info">
+        <div class="doc-name">Jıllıq esabat</div>
+        <div class="doc-meta">PDF · 2025 jıl</div>
+      </div>
+      <span class="doc-arrow">→</span>
+    </a>
+    <a href="#" class="doc-card">
+      <div class="doc-icon">📜</div>
+      <div class="doc-info">
+        <div class="doc-name">Texnikum nizami</div>
+        <div class="doc-meta">PDF · Jańartılgan 2024</div>
+      </div>
+      <span class="doc-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- BOG'LANISH -->
+<section id="contact">
+  <div class="section-eyebrow">Áziz oqıwshılar hám ata-analar</div>
+  <h2 class="section-title">Baylanısıw</h2>
+  <div class="section-line"></div>
+  <div class="contact-layout">
+    <div class="contact-info">
+      <p>Bizge hár qanday sorawıńız, ıntayımsızlıq ya da usınısıńız bolsa — háberlesiń. Texnikum hákim heyeti sizdiń qolayıńız ushın hámme waqıt tayın.</p>
+
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-item-label">Mánzil</div>
+          <div class="contact-item-value">Bozataw rayonı, Qaraqalpaqstan Respublikası</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-item-label">Telefon</div>
+          <div class="contact-item-value">+998 (61) 000-00-00</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📧</div>
+        <div>
+          <div class="contact-item-label">Elektron pochtası</div>
+          <div class="contact-item-value">texnikum2@edu.uz</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🕐</div>
+        <div>
+          <div class="contact-item-label">Jumıs waqtı</div>
+          <div class="contact-item-value">Dúysenbi–Juma: 8:00–17:00</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <div class="form-group">
+        <label>Ismiňiz</label>
+        <input type="text" placeholder="Ismiňizdi kiritiń" />
+      </div>
+      <div class="form-group">
+        <label>Telefon nomer</label>
+        <input type="tel" placeholder="+998 __ ___-__-__" />
+      </div>
+      <div class="form-group">
+        <label>Xabarıňız</label>
+        <textarea placeholder="Sorawıńız ya da usınısıńızdı jazıń..."></textarea>
+      </div>
+      <button class="btn-send" onclick="sendForm()">Jiberiw</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Bozataw 2-sanlı texnikum</div>
+  <ul class="footer-links">
+    <li><a href="#home">Bas bet</a></li>
+    <li><a href="#news">Jańalıqlar</a></li>
+    <li><a href="#teachers">Oqıtıwshılar</a></li>
+    <li><a href="#documents">Hújjetler</a></li>
+    <li><a href="#contact">Baylanısıw</a></li>
+  </ul>
+  <p style="font-size:13px; margin-top:8px;">© 2026 Bozataw rayonı 2-sanlı texnikum. Hámme huqıqlar qorıqlangan.</p>
+</footer>
+
+<script>
+  function toggleMenu() {
+    const links = document.getElementById('navLinks');
+    links.classList.toggle('open');
+  }
+
+  // Close menu on link click
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.getElementById('navLinks').classList.remove('open');
+    });
+  });
+
+  // Active nav highlight on scroll
+  const sections = document.querySelectorAll('section[id], #home');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current
+        ? '#F5A623' : '';
+    });
+  });
+
+  function sendForm() {
+    alert('Xabariňız jiberildi! Tez arada sizge baylanısamız.');
+  }
+</script>
+</body>
+</html>
